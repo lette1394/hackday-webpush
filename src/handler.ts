@@ -10,28 +10,31 @@ import {
 const CHANGE_ROOM = "change room";
 const DISCONNECT = "disconnect";
 const JOIN_ROOM = "join room";
+const LEAVE_ROOM = "leave room";
 const NOTIFICATION = "notification";
 
 const init = (context: SocketInitialContext) => {
   const { namespace, socket } = context;
-  let oldGrade;
 
   socket.on(JOIN_ROOM, (grade: UserGrade) => {
     socket.join(grade);
-    oldGrade = grade;
-    console.log("user joined");
+    console.log("user joined", grade);
   });
 
-  socket.on(CHANGE_ROOM, (newGrade: UserGrade) => {
-    socket.leave(oldGrade);
-    socket.join(newGrade);
-
-    oldGrade = newGrade;
-    console.log("room changed");
+  socket.on(LEAVE_ROOM, (grade: UserGrade) => {
+    socket.leave(grade);
+    console.log("user leaved", grade);
   });
+
+  // socket.on(CHANGE_ROOM, (newGrade: UserGrade) => {
+  //   socket.leave(oldGrade);
+  //   socket.join(newGrade);
+
+  //   oldGrade = newGrade;
+  //   console.log("room changed");
+  // });
 
   socket.on(DISCONNECT, () => {
-    socket.leave(oldGrade);
     console.log("Client disconnected");
   });
 };
@@ -45,10 +48,10 @@ const connectionHandler = ({ namespace }: SocketConnectionContext) => (
   });
 
   socket.on(NOTIFICATION, (noti: NotificationInput) => {
-    console.log("on noti", noti);
+    console.log("pub noti");
 
     noti.userGrades.map((userGrade) => {
-      namespace.to(userGrade).emit(NOTIFICATION, noti);
+      namespace.in(userGrade).emit(NOTIFICATION, noti);
     });
 
     //emit event for saving db through redis

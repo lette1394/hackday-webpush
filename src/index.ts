@@ -22,9 +22,12 @@ app.get("/login", (req, res) => {
   res.send("");
 });
 
-const notiServer = ioServer.of("/notification");
+const CONNECTION = "connection";
+const NAMESPACE_NOTIFICATION = "notification";
+
+const notiServer = ioServer.of(`/${NAMESPACE_NOTIFICATION}`);
 notiServer.on(
-  "connection",
+  CONNECTION,
   handler.connectionHandler({
     namespace: notiServer
   })
