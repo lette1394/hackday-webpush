@@ -27,6 +27,7 @@
   },
   "devDependencies": {
     "@types/react": "^16.7.7",
+    "@types/redis": "^2.8.8",
     "@types/socket.io": "^2.1.0",
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.7.0",

@@ -12,7 +12,7 @@ export interface NotificationInput {
   title: string;
   message: string;
   importance: NotificationImportance;
-  userGrades: UserGrade[];
+  grade: UserGrade;
   createAt: Date;
 }
 

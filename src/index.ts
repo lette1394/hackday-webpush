@@ -17,11 +17,6 @@ const server: http.Server = http.createServer(app);
 const ioServer: Server = io(server);
 ioServer.adapter(redisAdapter({ host: REDIS_HOST, port: REDIS_PORT }));
 
-app.get("/login", (req, res) => {
-  console.log("login");
-  res.send("");
-});
-
 const CONNECTION = "connection";
 const NAMESPACE_NOTIFICATION = "notification";
 
