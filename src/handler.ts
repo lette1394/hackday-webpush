@@ -1,25 +1,60 @@
 import { Server, Socket } from "socket.io";
-import { NotificationTarget, SocketInitialContext } from "./interface";
+import {
+  SocketInitialContext,
+  UserGrade,
+  SocketConnectionContext,
+  Notification,
+  NotificationInput
+} from "./interface";
+
+const CHANGE_ROOM = "change room";
+const DISCONNECT = "disconnect";
+const JOIN_ROOM = "join room";
+const NOTIFICATION = "notification";
 
 const init = (context: SocketInitialContext) => {
-  const { ioServer, target, socket } = context;
+  const { ioServer, socket } = context;
+  let oldGrade;
 
-  socket.join(target);
-
-  socket.
-};
-
-const connectionHandler = (notiServer: Server) => (socket: Socket): void => {
-  socket.join(NotificationTarget.BRONZE);
-
-  socket.on("NOTIFICATION", (notification) => {
-    console.log("noti", notification);
-    notiServer.emit("NOTIFICATION", notification);
+  socket.on(JOIN_ROOM, (grade: UserGrade) => {
+    socket.join(grade);
+    oldGrade = grade;
+    console.log("user joined");
   });
 
-  socket.on("disconnect", () => {
+  socket.on(CHANGE_ROOM, (newGrade: UserGrade) => {
+    socket.leave(oldGrade);
+    socket.join(newGrade);
+
+    oldGrade = newGrade;
+    console.log("room changed");
+  });
+
+  socket.on(DISCONNECT, () => {
+    socket.leave(oldGrade);
     console.log("Client disconnected");
   });
+};
+
+const connectionHandler = ({ ioServer }: SocketConnectionContext) => (
+  socket: Socket
+): void => {
+  init({
+    ioServer,
+    socket
+  });
+
+  socket.on(NOTIFICATION, (noti: NotificationInput) => {
+    console.log("on noti", noti);
+
+    noti.userGrades.map((userGrade) => {
+      ioServer.to(userGrade).emit(NOTIFICATION, noti);
+    });
+
+    //emit event for saving db through redis
+  });
+  
+  
 };
 
 export const handler = {

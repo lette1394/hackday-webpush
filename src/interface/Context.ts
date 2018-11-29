@@ -1,8 +1,10 @@
 import { Server, Socket } from "socket.io";
-import { NotificationTarget } from ".";
+import { UserGrade } from ".";
 
-export interface SocketInitialContext {
+export interface SocketConnectionContext {
   ioServer: Server;
+}
+
+export interface SocketInitialContext extends SocketConnectionContext {
   socket: Socket;
-  target: NotificationTarget;
 }

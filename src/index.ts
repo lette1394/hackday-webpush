@@ -4,6 +4,7 @@ import * as io from "socket.io";
 import * as redisAdapter from "socket.io-redis";
 import { Server, Socket } from "socket.io";
 import { handler } from "./handler";
+import { UserGrade } from "./interface";
 
 const PORT_FROM_COMMAND: number = Number(process.argv[2]);
 
@@ -22,7 +23,12 @@ app.get("/login", (req, res) => {
 });
 
 const notiServer = ioServer.of("/notification");
-notiServer.on("connection", handler.connectionHandler(ioServer));
+notiServer.on(
+  "connection",
+  handler.connectionHandler({
+    ioServer: notiServer
+  })
+);
 
 server.listen(
   SERVER_PORT,

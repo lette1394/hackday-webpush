@@ -1,3 +1,5 @@
+import { UserGrade } from "./User";
+
 export enum NotificationImportance {
   LOW = "LOW",
   MEDIUM = "MEDIUM",
@@ -5,17 +7,13 @@ export enum NotificationImportance {
   URGENT = "URGENT"
 }
 
-export enum NotificationTarget {
-  BRONZE = "BRONZE",
-  SILVER = "SILVER",
-  GOLD = "GOLD",
-  PLATINUM = "PLATINUM"
-}
-
-export interface Notification {
+export interface NotificationInput {
   key: string;
-  importance: NotificationImportance;
   title: string;
   message: string;
+  importance: NotificationImportance;
+  userGrades: UserGrade[];
   createAt: Date;
 }
+
+export interface Notification extends NotificationInput {}
