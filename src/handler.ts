@@ -13,7 +13,7 @@ const JOIN_ROOM = "join room";
 const NOTIFICATION = "notification";
 
 const init = (context: SocketInitialContext) => {
-  const { ioServer, socket } = context;
+  const { namespace, socket } = context;
   let oldGrade;
 
   socket.on(JOIN_ROOM, (grade: UserGrade) => {
@@ -36,11 +36,11 @@ const init = (context: SocketInitialContext) => {
   });
 };
 
-const connectionHandler = ({ ioServer }: SocketConnectionContext) => (
+const connectionHandler = ({ namespace }: SocketConnectionContext) => (
   socket: Socket
 ): void => {
   init({
-    ioServer,
+    namespace,
     socket
   });
 
@@ -48,13 +48,11 @@ const connectionHandler = ({ ioServer }: SocketConnectionContext) => (
     console.log("on noti", noti);
 
     noti.userGrades.map((userGrade) => {
-      ioServer.to(userGrade).emit(NOTIFICATION, noti);
+      namespace.to(userGrade).emit(NOTIFICATION, noti);
     });
 
     //emit event for saving db through redis
   });
-  
-  
 };
 
 export const handler = {

@@ -26,7 +26,7 @@ const notiServer = ioServer.of("/notification");
 notiServer.on(
   "connection",
   handler.connectionHandler({
-    ioServer: notiServer
+    namespace: notiServer
   })
 );
 
