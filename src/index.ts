@@ -3,8 +3,11 @@ import * as http from "http";
 import * as io from "socket.io";
 import * as redisAdapter from "socket.io-redis";
 import { Server, Socket } from "socket.io";
+import { handler } from "./handler";
 
-const SERVER_PORT: number = 9000;
+const PORT_FROM_COMMAND: number = Number(process.argv[2]);
+
+const SERVER_PORT: number = PORT_FROM_COMMAND || 9000;
 const REDIS_PORT: number = 6379;
 const REDIS_HOST: string = "localhost";
 
@@ -18,18 +21,8 @@ app.get("/login", (req, res) => {
   res.send("");
 });
 
-ioServer.on(
-  "connection",
-  (socket: Socket): void => {
-    socket.on("message", (msg) => {
-      socket.emit("reply", msg + "from server");
-    });
-
-    socket.on("disconnect", () => {
-      console.log("Client disconnected");
-    });
-  }
-);
+const notiServer = ioServer.of("/notification");
+notiServer.on("connection", handler.connectionHandler(ioServer));
 
 server.listen(
   SERVER_PORT,
