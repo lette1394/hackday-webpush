@@ -4,7 +4,3 @@ import { UserGrade } from ".";
 export interface SocketConnectionContext {
   namespace: Namespace;
 }
-
-export interface SocketInitialContext extends SocketConnectionContext {
-  socket: Socket;
-}
