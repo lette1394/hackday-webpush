@@ -1,4 +1,4 @@
-import { Socket } from "socket.io";
+import { Socket, Namespace } from "socket.io";
 import * as redis from "redis";
 import {
   UserGrade,
@@ -19,9 +19,7 @@ const pub = redis.createClient({
   port: REDIS_PORT
 });
 
-const connectionHandler = ({ namespace }: SocketConnectionContext) => (
-  socket: Socket
-): void => {
+const connectionHandler = (namespace: Namespace) => (socket: Socket): void => {
   addGradeNotificationHandler({ namespace, socket });
   addNewNotificationHandler({ namespace, socket });
 };

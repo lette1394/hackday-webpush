@@ -4,6 +4,6 @@ export {
   NotificationInput
 } from "./Notification";
 
-export { SocketInitialContext, SocketConnectionContext } from "./Context";
+export { SocketConnectionContext } from "./Context";
 
 export { UserGrade } from "./User";

@@ -18,12 +18,8 @@ const ioServer: Server = io(server);
 ioServer.adapter(redisAdapter({ host: REDIS_HOST, port: REDIS_PORT }));
 
 const notiServer = ioServer.of(`/${NAMESPACE}`);
-notiServer.on(
-  CONNECTION,
-  handler.connectionHandler({
-    namespace: notiServer
-  })
-);
+const connectionHandler = handler.connectionHandler(notiServer);
+notiServer.on(CONNECTION, connectionHandler);
 
 server.listen(
   SERVER_PORT,
