@@ -1,6 +1,6 @@
-import { Server, Socket, Namespace } from "socket.io";
-import { UserGrade } from ".";
+import { Socket, Namespace } from "socket.io";
 
 export interface SocketConnectionContext {
   namespace: Namespace;
+  socket: Socket;
 }
