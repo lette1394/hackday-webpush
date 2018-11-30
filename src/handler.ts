@@ -19,6 +19,13 @@ const pub = redis.createClient({
   port: REDIS_PORT
 });
 
+const connectionHandler = ({ namespace }: SocketConnectionContext) => (
+  socket: Socket
+): void => {
+  addGradeNotificationHandler({ namespace, socket });
+  addNewNotificationHandler({ namespace, socket });
+};
+
 const addGradeNotificationHandler = ({ socket }: SocketConnectionContext) => {
   socket.on(JOIN_ROOM, (grade: UserGrade) => {
     socket.join(grade);
@@ -45,13 +52,6 @@ const addNewNotificationHandler = ({
     namespace.in(noti.grade).emit(EVENT_NOTIFICATION, noti);
     pub.publish(EVENT_NOTIFICATION, JSON.stringify(noti));
   });
-};
-
-const connectionHandler = ({ namespace }: SocketConnectionContext) => (
-  socket: Socket
-): void => {
-  addGradeNotificationHandler({ namespace, socket });
-  addNewNotificationHandler({ namespace, socket });
 };
 
 export const handler = {
